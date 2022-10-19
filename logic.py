@@ -1,26 +1,3 @@
-# logic.py
-# --------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
-
-
-"""Representations and Inference for the CS 188 Logic Project
-
-Code originally from https://code.google.com/p/aima-python/
-Modified heavily with additional convenience classes and functions as well
-as an interface to the pycosat (picoSAT wrapper) library.
-https://pypi.python.org/pypi/pycosat.
-Original package contained implementations of functions and data structures
-for Knowledge bases and First-Order Logic.
-"""
 
 import itertools, re
 from typing import Tuple
@@ -33,48 +10,7 @@ import pycosat
 class Expr:
     """A symbolic mathematical expression.  We use this class for logical
     expressions, and for terms within logical expressions. In general, an
-    Expr has an op (operator) and a list of args.  The op can be:
-      Null-ary (no args) op:
-        A number, representing the number itself.  (e.g. Expr(42) => 42)
-        A symbol, representing a variable or constant (e.g. Expr('F') => F)
-      Unary (1 arg) op:
-        '~', '-', representing NOT, negation (e.g. Expr('~', Expr('P')) => ~P)
-      Binary (2 arg) op:
-        '>>', '<<', representing forward and backward implication
-        '+', '-', '*', '/', '**', representing arithmetic operators
-        '<', '>', '>=', '<=', representing comparison operators
-        '<=>', '^', representing logical equality and XOR
-      N-ary (0 or more args) op:
-        '&', '|', representing conjunction and disjunction
-        A symbol, representing a function term or FOL proposition
-
-    Exprs can be constructed with operator overloading: if x and y are Exprs,
-    then so are x + y and x & y, etc.  Also, if F and x are Exprs, then so is
-    F(x); it works by overloading the __call__ method of the Expr F.  Note
-    that in the Expr that is created by F(x), the op is the str 'F', not the
-    Expr F.   See http://www.python.org/doc/current/ref/specialnames.html
-    to learn more about operator overloading in Python.
-
-    WARNING: x == y and x != y are NOT Exprs.  The reason is that we want
-    to write code that tests 'if x == y:' and if x == y were the same
-    as Expr('==', x, y), then the result would always be true; not what a
-    programmer would expect.  But we still need to form Exprs representing
-    equalities and disequalities.  We concentrate on logical equality (or
-    equivalence) and logical disequality (or XOR).  You have 3 choices:
-        (1) Expr('<=>', x, y) and Expr('^', x, y)
-            Note that ^ is bitwise XOR in Python (and Java and C++)
-        (2) expr('x <=> y') and expr('x =/= y').
-            See the doc string for the function expr.
-        (3) (x % y) and (x ^ y).
-            It is very ugly to have (x % y) mean (x <=> y), but we need
-            SOME operator to make (2) work, and this seems the best choice.
-
-    WARNING: if x is an Expr, then so is x + 1, because the int 1 gets
-    coerced to an Expr by the constructor.  But 1 + x is an error, because
-    1 doesn't know how to add an Expr.  (Adding an __radd__ method to Expr
-    wouldn't help, because int.__add__ is still called first.) Therefore,
-    you should use Expr(1) + x instead, or ONE + x, or expr('1 + x').
-    """
+    Expr has an op (operator) and a list of args.  """
 
     def __init__(self, op, *args):
         "Op is a string or number; args are Exprs (or are coerced to Exprs)."
